@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.projectgui.ui.theme.ProjectGUITheme
-import org.intellij.lang.annotations.JdkConstants
-import java.util.Collections.copy
+
 
 val DarkYellow = Color(0xFFF5C518)
 val color = Color(0xFF120524)
@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/////////////////////////////////////////////////////////MIGUEL
 @Composable
 fun Bienvenida() {
     Column(
@@ -384,15 +385,19 @@ fun DefaultPreview() {
     ProjectGUITheme {
         //Bienvenida()
         //SignUp()
-        LogIn()
+        //LogIn()
         //Sidebar()
+        //Recomendaciones()
+        //Top()
+        News()
+
     }
 }
 //Santiago
 data class Peliculas(val titulo:String, val year:Int, val imageId:Int=0)
 data class Series(val titulo:String,val year:Int,val imageId:Int=0)
-val lPeliculas= arrayListOf<Peliculas>(Peliculas("Birds of Prey",2020,R.drawable.peli1))
-val lSeries= arrayListOf<Series>(Series("No time to die",2021,R.drawable.serie1))
+val lPeliculas= arrayListOf(Peliculas("Birds of Prey",2020,R.drawable.peli1))
+val lSeries= arrayListOf(Series("No time to die",2021,R.drawable.serie1))
 fun agregar_peliculas(){
     lPeliculas.add(Peliculas("Now You see me 2",2016,R.drawable.peli2))
     lPeliculas.add(Peliculas("Onward",2020,R.drawable.peli3))
@@ -400,7 +405,7 @@ fun agregar_peliculas(){
 
 }
 @Composable
-fun dropDownMenu() {
+fun DropDownMenu() {
 
     var expanded by remember { mutableStateOf(false) }
     val suggestions = listOf("Series", "Peliculas")
@@ -471,11 +476,11 @@ fun Watched(){
         )
         //Drop down button
         Row {
-            dropDownMenu()
+            DropDownMenu()
         }
-        Row(){
+        Row {
             Button(onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.ui.graphics.Color.Black),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .size(width = 120.dp, height = 55.dp),
@@ -483,12 +488,12 @@ fun Watched(){
             ) {
                 Text(text = "Agregar", color = Color.White, fontSize = 16.sp)
             }
-            var text by remember{ mutableStateOf("") }
+            val text by remember{ mutableStateOf("") }
             TextField(value =text , onValueChange = {}, modifier = Modifier
                 .padding(20.dp)
                 .size(width = 200.dp, height = 55.dp))
         }
-        listado_contenido()
+        Listado_contenido()
 
     }
 }
@@ -518,7 +523,7 @@ fun Wachlist(){
             modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 25.dp)
         )
 
-        listado_contenido()
+        Listado_contenido()
 
     }
 
@@ -526,11 +531,15 @@ fun Wachlist(){
 
 
 @Composable
-fun listado_contenido(){
+fun Listado_contenido(){
 
-    LazyColumn(){
+    LazyColumn {
         items(lPeliculas){
                 Peli->Componente_visual(Peli)
+        }
+        items(lSeries){
+                Series->
+            Componente_visualSeries(Series)
         }
     }
 }
@@ -547,7 +556,7 @@ fun Componente_visual(peli:Peliculas){
         elevation = 8.dp,
     ) {
 
-        Column() {
+        Column {
             Image(
                 painter = painterResource(peli.imageId),
                 contentDescription = "Wachlist",
@@ -573,7 +582,7 @@ fun Componente_visual(peli:Peliculas){
                 )
                 val rank =peli.year.toString()
                 Text(
-                    text = "Año "+rank,
+                    text = "Año $rank",
                     modifier = Modifier
                         .fillMaxWidth(1F)
                         .wrapContentWidth(Alignment.End)
@@ -611,10 +620,10 @@ fun FeedBack() {
             modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 75.dp)
         )
         //Image(painter = painterResource(id = comments  ) , contentDescription ="comments" )
-        row_stars()
+        Row_stars()
         TextAreaExample()
         Button(onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(backgroundColor = androidx.compose.ui.graphics.Color.Black),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
             modifier = Modifier
                 .padding(top = 85.dp)
                 .size(width = 200.dp, height = 55.dp),
@@ -640,7 +649,7 @@ fun TextAreaExample() {
     )
 }
 @Composable
-fun row_stars(){
+fun Row_stars(){
     Row(modifier=Modifier.padding(top=40.dp)){
         for(x in 1 until 6){
             Star_buttons()
@@ -653,5 +662,247 @@ fun Star_buttons(){
 
     }) {
         Icon(imageVector = Icons.TwoTone.Star,contentDescription = null, modifier = Modifier.size(100.dp))
+    }
+}
+
+/////////////////////////////////////////////////////////PILAR
+data class Noticias(val titulo:String,val noticia:String,val imageId:Int=0)
+val lNoticias = arrayListOf(Noticias("Get ready for a fun", "Cody Fisher", R.drawable.nuno))
+
+fun agregar_recomendacionesSeires(){
+    lSeries.add(Series("Star Trek", 1922, R.drawable.startrek))
+}
+fun agregar_noticias(){
+    lNoticias.add( Noticias("When is the right time to watch series?",
+        "Wade Warren",
+        R.drawable.ndos))
+    lNoticias.add( Noticias("Edible plants",
+        "Theresa Webb",
+        R.drawable.ncuatro))
+    lNoticias.add( Noticias("Look for these places when you don't have a tent",
+        "Marvin McKinney",
+        R.drawable.ntres))
+    lNoticias.add( Noticias("These animals are easy to obtain and consume",
+        "Guy Hawkins",
+        R.drawable.ncinco))
+    lNoticias.add( Noticias("Make a SOS signal from the goods around us",
+        "Wade Warren",
+        R.drawable.nseis))
+
+}
+
+@Composable
+fun Recomendaciones(){
+    agregar_peliculas()
+    Image(painter = painterResource(R.drawable.hamburguer_menu),
+        contentDescription = "hamburger_menu",
+        modifier = Modifier
+            .size(50.dp)
+            .padding(start = 20.dp, top = 20.dp))
+    Column( horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()){
+        Image(
+            painter = painterResource(R.drawable.recom_icon),
+            contentDescription = "Recomendaciones",
+            modifier = Modifier
+                .size(175.dp)
+                .padding(top = 50.dp),
+            alignment = Alignment.Center
+        )
+
+        Text(
+            text = "Recomendaciones",
+            textAlign = TextAlign.Center,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 15.dp)
+        )
+        Listado_contenido()
+
+    }
+
+}
+
+//----------------------------------------
+@Composable
+fun Top(){
+    agregar_peliculas()
+    Image(painter = painterResource(R.drawable.hamburguer_menu),
+        contentDescription = "hamburger_menu",
+        modifier = Modifier
+            .size(50.dp)
+            .padding(start = 20.dp, top = 20.dp))
+    Column( horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()){
+        Image(
+            painter = painterResource(R.drawable.top_icon),
+            contentDescription = "Recomendaciones",
+            modifier = Modifier
+                .size(100.dp)
+                .padding(top = 50.dp),
+            alignment = Alignment.Center
+        )
+        Text(
+            text = "Top",
+            textAlign = TextAlign.Center,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 15.dp)
+        )
+        DropDownMenu()
+        Listado_contenido()
+
+    }
+
+}
+
+@Composable
+fun News(){
+    agregar_noticias()
+    Image(painter = painterResource(R.drawable.hamburguer_menu),
+        contentDescription = "hamburger menu",
+        modifier = Modifier
+            .size(50.dp)
+            .padding(start = 20.dp, top = 20.dp))
+    Column( horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()){
+        Image(
+            painter = painterResource(R.drawable.news_icon),
+            contentDescription = "News",
+            modifier = Modifier
+                .size(150.dp)
+                .padding(top = 50.dp),
+            alignment = Alignment.Center
+        )
+        Text(
+            text = "News",
+            textAlign = TextAlign.Center,
+            fontSize = 40.sp,
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 5.dp, bottom = 15.dp)
+        )
+        Lista_de_noticias()
+
+    }
+
+}
+
+
+
+
+//-----------------------------------------------
+
+@Composable
+fun Lista_de_noticias(){
+
+    LazyColumn {
+        items(lNoticias){
+                nota->Componente_visual_noticias(nota)
+        }
+    }
+}
+
+
+
+@Composable
+fun Componente_visual_noticias(nota:Noticias){
+    Card(
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier
+            .padding(
+                bottom = 6.dp,
+                top = 6.dp,
+            )
+            .fillMaxWidth(0.5F),
+        elevation = 8.dp,
+    ) {
+
+
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+        ){
+            Image(
+                painter = painterResource(nota.imageId),
+                contentDescription = "Recomendaciones",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.05F),
+                contentScale = ContentScale.Crop,
+            )
+            Text(
+                text = nota.titulo,
+                modifier = Modifier
+                    .fillMaxWidth(2F)
+                    .wrapContentWidth(Alignment.Start).padding(bottom = 5.dp),
+                style = MaterialTheme.typography.h5, fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = nota.noticia,
+                modifier = Modifier
+                    .fillMaxWidth(1F)
+                    .wrapContentWidth(Alignment.Start),
+                style = MaterialTheme.typography.h6
+            )
+
+
+        }
+
+    }
+}
+
+@Composable
+fun Componente_visualSeries(serie:Series){
+    Card(
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier
+            .padding(
+                bottom = 6.dp,
+                top = 6.dp,
+            )
+            .fillMaxWidth(0.5F),
+        elevation = 8.dp,
+    ) {
+
+        Column {
+            Image(
+                painter = painterResource(serie.imageId),
+                contentDescription = "Recomendaciones",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.05F),
+                contentScale = ContentScale.Crop,
+            )
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, bottom = 12.dp, start = 8.dp, end = 8.dp)
+            ){
+                Text(
+                    text = serie.titulo,
+                    modifier = Modifier
+                        .fillMaxWidth(0.5F)
+                        .wrapContentWidth(Alignment.Start)
+                    ,
+                    style = MaterialTheme.typography.h5
+                )
+                val rank =serie.year.toString()
+                Text(
+                    text = "Año $rank",
+                    modifier = Modifier
+                        .fillMaxWidth(1F)
+                        .wrapContentWidth(Alignment.End)
+                    ,
+                    style = MaterialTheme.typography.h6
+                )
+
+            }
+        }
     }
 }
