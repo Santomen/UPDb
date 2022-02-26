@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -26,14 +27,20 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.projectgui.ui.theme.ProjectGUITheme
+import org.intellij.lang.annotations.JdkConstants
+import java.util.Collections.copy
 
 val DarkYellow = Color(0xFFF5C518)
+val color = Color(0xFF120524)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +50,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Composable
 fun Bienvenida() {
@@ -89,6 +95,12 @@ fun Bienvenida() {
 
 @Composable
 fun SignUp() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirm_password by remember { mutableStateOf("") }
+    var hidden by remember { mutableStateOf(true) }
+    var hidden2 by remember { mutableStateOf(true) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -104,41 +116,74 @@ fun SignUp() {
                 .padding(top = 80.dp),
             alignment = Alignment.Center
         )
-        Column {
-            Card(modifier = Modifier
-                .padding(top = 80.dp)
-                .padding(start = 20.dp)
-                .size(width = 250.dp, height = 50.dp),
-                shape = RoundedCornerShape(corner = CornerSize(10.dp))
-            ) {
-                Text(text = "Correo", modifier = Modifier
-                    .padding(top = 12.dp)
-                    .padding(start = 15.dp),
-                    color = Color.LightGray
-                )
-            }
-            Card(modifier = Modifier
-                .padding(20.dp)
-                .size(width = 250.dp, height = 50.dp),
-                RoundedCornerShape(corner = CornerSize(10.dp))
-            ) {
-                Text(text = "Contraseña", modifier = Modifier
-                    .padding(top = 12.dp)
-                    .padding(start = 15.dp),
-                    color = Color.LightGray
-                )
-            }
-            Card(modifier = Modifier
-                .padding(start = 20.dp)
-                .size(width = 250.dp, height = 50.dp),
-                RoundedCornerShape(corner = CornerSize(10.dp))
-            ) {
-                Text(text = "Confirmación de contraseña", modifier = Modifier
-                    .padding(top = 12.dp)
-                    .padding(start = 15.dp),
-                    color = Color.LightGray
-                )
-            }
+        Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 50.dp)){
+            TextField(
+                modifier = Modifier.size(width = 250.dp, height = 75.dp).padding(top = 20.dp),
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = color,
+                    backgroundColor = Color.White,
+                    focusedLabelColor = color.copy(alpha = ContentAlpha.high),
+                    focusedIndicatorColor = Color.Transparent,
+                    cursorColor = color,
+                ),
+            )
+            TextField(
+                modifier = Modifier.size(width = 250.dp, height = 75.dp).padding(top = 20.dp),
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = color,
+                    backgroundColor = Color.White,
+                    focusedLabelColor = color.copy(alpha = ContentAlpha.high),
+                    focusedIndicatorColor = Color.Transparent,
+                    cursorColor = color,
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),//2
+                singleLine = true,
+                visualTransformation =
+                if (hidden) PasswordVisualTransformation() else VisualTransformation.None,//3
+                trailingIcon = {// 4
+                    IconButton(onClick = { hidden = !hidden }) {
+                        val vector = painterResource(//5
+                            if (hidden) R.drawable.watched_icon
+                            else R.drawable.watched_icon
+                        )
+                        val description = if (hidden) "Ocultar contraseña" else "Revelar contraseña" //6
+                        Icon(painter = vector, contentDescription = description)
+                    }
+                }
+            )
+            TextField(
+                modifier = Modifier.size(width = 250.dp, height = 75.dp).padding(top = 20.dp),
+                value = confirm_password,
+                onValueChange = { confirm_password = it },
+                label = { Text("Confirmar contraseña") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = color,
+                    backgroundColor = Color.White,
+                    focusedLabelColor = color.copy(alpha = ContentAlpha.high),
+                    focusedIndicatorColor = Color.Transparent,
+                    cursorColor = color,
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),//2
+                singleLine = true,
+                visualTransformation =
+                if (hidden2) PasswordVisualTransformation() else VisualTransformation.None,//3
+                trailingIcon = {// 4
+                    IconButton(onClick = { hidden2 = !hidden2 }) {
+                        val vector = painterResource(//5
+                            if (hidden2) R.drawable.watched_icon
+                            else R.drawable.watched_icon
+                        )
+                        val description = if (hidden2) "Ocultar contraseña" else "Revelar contraseña" //6
+                        Icon(painter = vector, contentDescription = description)
+                    }
+                }
+            )
         }
         Button(onClick = { /*TODO*/ },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
@@ -150,7 +195,6 @@ fun SignUp() {
             Text(text = "Registrarse", color = Color.Black, fontSize = 22.sp)
         }
         Row {
-
             Text(text = "O", textAlign = TextAlign.Center, color = Color.White, modifier = Modifier.padding(top = 10.dp))
         }
         Button(onClick = { /*TODO*/ },
@@ -177,6 +221,10 @@ fun SignUp() {
 
 @Composable
 fun LogIn() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var hidden by remember { mutableStateOf(true) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -192,30 +240,47 @@ fun LogIn() {
                 .padding(top = 80.dp),
             alignment = Alignment.Center
         )
-        Column {
-            Card(modifier = Modifier
-                .padding(top = 80.dp)
-                .padding(start = 20.dp)
-                .size(width = 250.dp, height = 50.dp),
-                shape = RoundedCornerShape(corner = CornerSize(10.dp))
-            ) {
-                Text(text = "Correo", modifier = Modifier
-                    .padding(top = 12.dp)
-                    .padding(start = 15.dp),
-                    color = Color.LightGray
-                )
-            }
-            Card(modifier = Modifier
-                .padding(20.dp)
-                .size(width = 250.dp, height = 50.dp),
-                RoundedCornerShape(corner = CornerSize(10.dp))
-            ) {
-                Text(text = "Contraseña", modifier = Modifier
-                    .padding(top = 12.dp)
-                    .padding(start = 15.dp),
-                    color = Color.LightGray
-                )
-            }
+        Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 40.dp)) {
+            TextField(
+                modifier = Modifier.size(width = 250.dp, height = 75.dp).padding(top = 20.dp),
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = color,
+                    backgroundColor = Color.White,
+                    focusedLabelColor = color.copy(alpha = ContentAlpha.high),
+                    focusedIndicatorColor = Color.Transparent,
+                    cursorColor = color,
+                ),
+            )
+            TextField(
+                modifier = Modifier.size(width = 250.dp, height = 75.dp).padding(top = 20.dp),
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = color,
+                    backgroundColor = Color.White,
+                    focusedLabelColor = color.copy(alpha = ContentAlpha.high),
+                    focusedIndicatorColor = Color.Transparent,
+                    cursorColor = color,
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),//2
+                singleLine = true,
+                visualTransformation =
+                if (hidden) PasswordVisualTransformation() else VisualTransformation.None,//3
+                trailingIcon = {// 4
+                    IconButton(onClick = { hidden = !hidden }) {
+                        val vector = painterResource(//5
+                            if (hidden) R.drawable.watched_icon
+                            else R.drawable.watched_icon
+                        )
+                        val description = if (hidden) "Ocultar contraseña" else "Revelar contraseña" //6
+                        Icon(painter = vector, contentDescription = description)
+                    }
+                }
+            )
             Text(text = "¿Olvidaste tu constraseña?", color = Color.White, modifier = Modifier.padding(start = 85.dp))
         }
         Button(onClick = { /*TODO*/ },
@@ -319,8 +384,8 @@ fun DefaultPreview() {
     ProjectGUITheme {
         //Bienvenida()
         //SignUp()
-        //LogIn()
-        Sidebar()
+        LogIn()
+        //Sidebar()
     }
 }
 //Santiago
